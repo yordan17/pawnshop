@@ -1,5 +1,6 @@
-package app.pawnshop.customer;
+package app.pawnshop.customer.repository;
 
+import app.pawnshop.customer.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

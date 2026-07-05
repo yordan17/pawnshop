@@ -1,4 +1,4 @@
-package app.pawnshop.customer;
+package app.pawnshop.customer.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
