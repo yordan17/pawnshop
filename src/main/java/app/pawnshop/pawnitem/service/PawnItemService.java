@@ -53,6 +53,10 @@ public class PawnItemService {
         return pawnItemRepository.findAll();
     }
 
+    public List<PawnItem> getPawnItemsByStatus(ItemStatus status) {
+        return pawnItemRepository.findByStatus(status);
+    }
+
     public PawnItem updatePawnItem(UUID id, PawnItemRequest request) {
         PawnItem item = pawnItemRepository.findById(id)
                 .orElseThrow(() -> new PawnItemNotFoundException(id));

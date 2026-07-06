@@ -62,6 +62,10 @@ public class ContractService {
         return contractRepository.findAll();
     }
 
+    public List<Contract> getContractsByStatus(ContractStatus status) {
+        return contractRepository.findByStatus(status);
+    }
+
     public Contract updateContract(UUID id, ContractRequest request) {
         Contract contract = contractRepository.findById(id)
                 .orElseThrow(() -> new ContractNotFoundException(id));
