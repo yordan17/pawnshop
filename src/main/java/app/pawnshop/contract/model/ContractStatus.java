@@ -4,5 +4,6 @@ public enum ContractStatus {
     ACTIVE,
     REDEEMED,
     EXPIRED,
-    SOLD
+    SOLD,
+    CANCELLED
 }
