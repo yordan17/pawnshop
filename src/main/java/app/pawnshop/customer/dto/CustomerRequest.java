@@ -2,6 +2,7 @@ package app.pawnshop.customer.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +20,7 @@ public class CustomerRequest {
     private String lastName;
 
     @NotBlank
-    @Size(min = 5, max = 20)
+    @Pattern(regexp = "\\d{5,20}", message = "Телефонът трябва да съдържа само числа")
     private String phoneNumber;
 
     @NotBlank
@@ -27,7 +28,7 @@ public class CustomerRequest {
     private String email;
 
     @NotBlank
-    @Size(min = 5, max = 20)
+    @Pattern(regexp = "\\d{10}", message = "ЕГН трябва да съдържа точно 10 числа")
     private String personalId;
 
     @NotBlank
