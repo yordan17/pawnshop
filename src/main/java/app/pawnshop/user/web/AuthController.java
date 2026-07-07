@@ -1,9 +1,7 @@
 package app.pawnshop.user.web;
 
 import app.pawnshop.user.dto.RegisterForm;
-import app.pawnshop.user.dto.RegisterRequest;
 import app.pawnshop.user.exception.UserAlreadyExistsException;
-import app.pawnshop.user.model.UserRole;
 import app.pawnshop.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,14 +34,8 @@ public class AuthController {
             return "register";
         }
 
-        RegisterRequest request = new RegisterRequest();
-        request.setUsername(form.getUsername());
-        request.setPassword(form.getPassword());
-        request.setEmail(form.getEmail());
-        request.setRole(UserRole.EMPLOYEE);
-
         try {
-            userService.register(request);
+            userService.register(form);
             log.info("User registered successfully: {}", form.getUsername());
             return "redirect:/login?registered";
         } catch (UserAlreadyExistsException e) {

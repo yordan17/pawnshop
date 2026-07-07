@@ -70,4 +70,8 @@ public class PaymentService {
     public List<Payment> getAllPayments() {
         return paymentRepository.findAll();
     }
+
+    public List<Payment> getPaymentsByContractId(UUID contractId) {
+        return paymentRepository.findByContractId(contractId);
+    }
 }
