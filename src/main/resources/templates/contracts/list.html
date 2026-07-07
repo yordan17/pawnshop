@@ -20,7 +20,7 @@
     <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
     <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table class="table table-hover">
             <thead class="table-dark">
                 <tr>
                     <th>Номер</th>
@@ -36,15 +36,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="contract : ${contracts}">
+                <tr th:each="contract : ${contracts}"
+                    th:classappend="${contract.status.name() != 'ACTIVE'} ? 'table-secondary text-muted'">
                     <td th:text="${contract.contractNumber}"></td>
                     <td th:text="${contract.customer.firstName + ' ' + contract.customer.lastName}"></td>
                     <td th:text="${contract.pawnItem.name}"></td>
-                    <td th:text="${contract.loanAmount}"></td>
-                    <td th:text="${contract.interestRate}"></td>
+                    <td th:text="${'€' + contract.loanAmount}"></td>
+                    <td th:text="${contract.interestRate + '%'}"></td>
                     <td th:text="${contract.startDate}"></td>
                     <td th:text="${contract.dueDate}"></td>
-                    <td th:text="${interestMap[contract.id]}"></td>
+                    <td th:text="${'€' + interestMap[contract.id]}"></td>
                     <td>
                         <span class="badge"
                               th:classappend="${contract.status.name() == 'ACTIVE'} ? 'bg-success' :
