@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -55,8 +57,22 @@ public class PaymentService {
 
         if (request.getType() == PaymentType.REDEMPTION) {
             contractService.changeContractStatus(contract.getId(), ContractStatus.REDEEMED);
-            pawnItemService.changeItemStatus(contract.getPawnItem().getId(), ItemStatus.REDEEMED);
-            log.info("Contract {} and pawn item {} marked as REDEEMED", contract.getId(), contract.getPawnItem().getId());
+            pawnItemService.changeItemStatus(contract.getPawnItem().getId(), ItemStatus.AVAILABLE);
+            log.info("Contract {} marked as REDEEMED, pawn item {} returned to AVAILABLE", contract.getId(), contract.getPawnItem().getId());
+        } else if (request.getType() == PaymentType.PARTIAL) {
+            BigDecimal accruedInterest = contractService.calculateAccruedInterestForDate(contract, request.getPaymentDate());
+            BigDecimal principalReduction = request.getAmount().subtract(accruedInterest);
+            if (principalReduction.compareTo(BigDecimal.ZERO) > 0) {
+                contractService.reduceLoanAmount(contract.getId(), principalReduction);
+                log.info("Contract {} principal reduced by {}, interest portion {}", contract.getId(), principalReduction, accruedInterest);
+            } else {
+                log.info("Contract {} partial payment covers only interest: {}", contract.getId(), request.getAmount());
+            }
+            contractService.extendDueDate(contract.getId());
+            log.info("Contract {} due date extended by 1 month after partial payment", contract.getId());
+        } else if (request.getType() == PaymentType.INTEREST) {
+            contractService.extendDueDate(contract.getId());
+            log.info("Contract {} due date extended by 1 month after interest payment", contract.getId());
         }
 
         return saved;
