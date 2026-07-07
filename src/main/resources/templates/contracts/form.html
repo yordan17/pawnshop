@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Договор - Заложна Къща</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 th:text="${contractId != null} ? 'Редактирай договор' : 'Нов договор'"></h2>
+        <a th:href="@{/contracts}" class="btn btn-outline-secondary">← Назад</a>
+    </div>
+
+    <div class="card shadow-sm" style="max-width: 640px;">
+        <div class="card-body">
+            <form th:action="${contractId != null} ? @{/contracts/{id}/edit(id=${contractId})} : @{/contracts}"
+                  th:object="${contractRequest}" method="post" novalidate>
+
+                <div th:if="${contractId == null}" class="mb-3">
+                    <label for="pawnItemId" class="form-label">Вещ (налични)</label>
+                    <select id="pawnItemId" th:field="*{pawnItemId}"
+                            class="form-select" th:classappend="${#fields.hasErrors('pawnItemId')} ? 'is-invalid'"
+                            onchange="onItemSelected(this)">
+                        <option value=""
+                                data-customer=""
+                                data-amount=""
+                                data-rate="">-- Изберете вещ --</option>
+                        <option th:each="item : ${pawnItems}"
+                                th:value="${item.id}"
+                                th:text="${item.name + ' (' + item.estimatedValue + ' EUR)'}"
+                                th:attr="data-customer=${item.customer.firstName + ' ' + item.customer.lastName},
+                                         data-amount=${item.estimatedValue},
+                                         data-rate=${item.interestRate}"></option>
+                    </select>
+                    <span class="invalid-feedback" th:if="${#fields.hasErrors('pawnItemId')}"
+                          th:errors="*{pawnItemId}"></span>
+                </div>
+
+                <div th:if="${contractId == null}" class="mb-3">
+                    <label class="form-label">Клиент</label>
+                    <input type="text" id="customerDisplay" class="form-control bg-light" readonly
+                           placeholder="—">
+                </div>
+
+                <div th:if="${contractId == null}" class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label class="form-label">Сума на заема (EUR)</label>
+                        <input type="text" id="amountDisplay" class="form-control bg-light" readonly
+                               placeholder="—">
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label">Лихвен процент (%)</label>
+                        <input type="text" id="rateDisplay" class="form-control bg-light" readonly
+                               placeholder="—">
+                    </div>
+                </div>
+
+                <div th:if="${contractId != null}" class="mb-3">
+                    <label class="form-label">Вещ</label>
+                    <input type="text" class="form-control bg-light" readonly
+                           th:value="${contract.pawnItem.name}">
+                    <input type="hidden" th:field="*{pawnItemId}">
+                </div>
+
+                <div th:if="${contractId != null}" class="mb-3">
+                    <label class="form-label">Клиент</label>
+                    <input type="text" class="form-control bg-light" readonly
+                           th:value="${contract.customer.firstName + ' ' + contract.customer.lastName}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="startDate" class="form-label">Начална дата</label>
+                    <input type="date" id="startDate" th:field="*{startDate}"
+                           class="form-control" th:classappend="${#fields.hasErrors('startDate')} ? 'is-invalid'">
+                    <span class="invalid-feedback" th:if="${#fields.hasErrors('startDate')}"
+                          th:errors="*{startDate}"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="dueDate" class="form-label">Краен срок</label>
+                    <input type="date" id="dueDate" th:field="*{dueDate}"
+                           class="form-control" th:classappend="${#fields.hasErrors('dueDate')} ? 'is-invalid'">
+                    <span class="invalid-feedback" th:if="${#fields.hasErrors('dueDate')}"
+                          th:errors="*{dueDate}"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100"
+                        th:text="${contractId != null} ? 'Запази промените' : 'Създай договор'"></button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function onItemSelected(select) {
+        const opt = select.options[select.selectedIndex];
+        document.getElementById('customerDisplay').value = opt.getAttribute('data-customer') || '';
+        document.getElementById('amountDisplay').value  = opt.getAttribute('data-amount')   || '';
+        document.getElementById('rateDisplay').value    = opt.getAttribute('data-rate')     || '';
+    }
+
+    (function () {
+        const startInput = document.getElementById('startDate');
+        const dueInput   = document.getElementById('dueDate');
+        if (!startInput || !dueInput) return;
+
+        const today = new Date();
+        const due   = new Date();
+        due.setDate(due.getDate() + 30);
+
+        const fmt = d => {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        };
+        if (!startInput.value) startInput.value = fmt(today);
+        if (!dueInput.value)   dueInput.value   = fmt(due);
+    })();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

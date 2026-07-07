@@ -7,12 +7,11 @@ import app.pawnshop.contract.model.Contract;
 import app.pawnshop.contract.model.ContractStatus;
 import app.pawnshop.contract.repository.ContractRepository;
 import app.pawnshop.customer.model.Customer;
-import app.pawnshop.customer.service.CustomerService;
+import app.pawnshop.pawnitem.model.ItemStatus;
 import app.pawnshop.pawnitem.model.PawnItem;
 import app.pawnshop.pawnitem.service.PawnItemService;
-import app.pawnshop.user.exception.UserNotFoundException;
 import app.pawnshop.user.model.User;
-import app.pawnshop.user.repository.UserRepository;
+import app.pawnshop.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,20 +25,19 @@ import java.util.UUID;
 public class ContractService {
 
     private final ContractRepository contractRepository;
-    private final CustomerService customerService;
     private final PawnItemService pawnItemService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public Contract createContract(ContractRequest request) {
-        Customer customer = customerService.getCustomerById(request.getCustomerId());
+    public Contract createContract(ContractRequest request, String username) {
         PawnItem pawnItem = pawnItemService.getPawnItemById(request.getPawnItemId());
-        User createdBy = userRepository.findById(request.getCreatedById())
-                .orElseThrow(() -> new UserNotFoundException(request.getCreatedById()));
+        Customer customer = pawnItem.getCustomer();
+        User createdBy = userService.getUserByUsername(username);
+        String contractNumber = String.format("C-%04d", contractRepository.count() + 1);
 
         Contract contract = Contract.builder()
-                .contractNumber(request.getContractNumber())
-                .loanAmount(request.getLoanAmount())
-                .interestRate(request.getInterestRate())
+                .contractNumber(contractNumber)
+                .loanAmount(pawnItem.getEstimatedValue())
+                .interestRate(pawnItem.getInterestRate())
                 .startDate(request.getStartDate())
                 .dueDate(request.getDueDate())
                 .status(ContractStatus.ACTIVE)
@@ -49,7 +47,8 @@ public class ContractService {
                 .build();
 
         Contract saved = contractRepository.save(contract);
-        log.info("Contract created with id: {}", saved.getId());
+        pawnItemService.changeItemStatus(pawnItem.getId(), ItemStatus.PAWNED);
+        log.info("Contract {} created with id: {}", contractNumber, saved.getId());
         return saved;
     }
 
@@ -70,19 +69,8 @@ public class ContractService {
         Contract contract = contractRepository.findById(id)
                 .orElseThrow(() -> new ContractNotFoundException(id));
 
-        Customer customer = customerService.getCustomerById(request.getCustomerId());
-        PawnItem pawnItem = pawnItemService.getPawnItemById(request.getPawnItemId());
-        User createdBy = userRepository.findById(request.getCreatedById())
-                .orElseThrow(() -> new UserNotFoundException(request.getCreatedById()));
-
-        contract.setContractNumber(request.getContractNumber());
-        contract.setLoanAmount(request.getLoanAmount());
-        contract.setInterestRate(request.getInterestRate());
         contract.setStartDate(request.getStartDate());
         contract.setDueDate(request.getDueDate());
-        contract.setCustomer(customer);
-        contract.setPawnItem(pawnItem);
-        contract.setCreatedBy(createdBy);
 
         Contract updated = contractRepository.save(contract);
         log.info("Contract updated with id: {}", updated.getId());
