@@ -11,9 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,7 +35,6 @@ public class PawnItem {
     private UUID id;
 
     @Column(nullable = false)
-    @NotBlank
     @Size(min = 2, max = 100)
     private String name;
 
@@ -48,27 +44,20 @@ public class PawnItem {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotNull
     private ItemCategory category;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "item_condition", nullable = false)
-    @NotNull
     private ItemCondition condition;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    @NotNull
-    @DecimalMin(value = "0.01")
     private BigDecimal estimatedValue;
 
-    @Column(nullable = false, precision = 5, scale = 2)
-    @NotNull
-    @DecimalMin(value = "0.01")
+    @Column(precision = 5, scale = 2)
     private BigDecimal interestRate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotNull
     private ItemStatus status;
 
     @ManyToOne(optional = false)

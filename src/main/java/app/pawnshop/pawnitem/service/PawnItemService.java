@@ -101,7 +101,8 @@ public class PawnItemService {
     private void validateStatusTransition(ItemStatus current, ItemStatus next) {
         boolean valid = switch (current) {
             case AVAILABLE -> next == ItemStatus.PAWNED;
-            case PAWNED -> next == ItemStatus.REDEEMED || next == ItemStatus.EXPIRED;
+            case PAWNED -> next == ItemStatus.REDEEMED || next == ItemStatus.EXPIRED || next == ItemStatus.AVAILABLE;
+            case REDEEMED -> next == ItemStatus.AVAILABLE;
             case EXPIRED -> next == ItemStatus.SOLD;
             default -> false;
         };
