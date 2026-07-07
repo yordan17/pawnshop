@@ -69,10 +69,12 @@ public class PaymentService {
                 log.info("Contract {} partial payment covers only interest: {}", contract.getId(), request.getAmount());
             }
             contractService.extendDueDate(contract.getId());
-            log.info("Contract {} due date extended by 1 month after partial payment", contract.getId());
+            contractService.resetStartDate(contract.getId(), request.getPaymentDate());
+            log.info("Contract {} due date extended and start date reset to {} after partial payment", contract.getId(), request.getPaymentDate());
         } else if (request.getType() == PaymentType.INTEREST) {
             contractService.extendDueDate(contract.getId());
-            log.info("Contract {} due date extended by 1 month after interest payment", contract.getId());
+            contractService.resetStartDate(contract.getId(), request.getPaymentDate());
+            log.info("Contract {} due date extended and start date reset to {} after interest payment", contract.getId(), request.getPaymentDate());
         }
 
         return saved;

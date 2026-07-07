@@ -84,7 +84,8 @@ public class ContractService {
     public BigDecimal calculateAccruedInterestForDate(Contract contract, LocalDate date) {
         long totalPeriodDays = ChronoUnit.DAYS.between(contract.getStartDate(), contract.getDueDate());
         long daysElapsed = ChronoUnit.DAYS.between(contract.getStartDate(), date);
-        if (daysElapsed <= 0 || totalPeriodDays <= 0) {
+        if (daysElapsed <= 0 || totalPeriodDays <= 0
+                || contract.getLoanAmount() == null || contract.getInterestRate() == null) {
             return BigDecimal.ZERO;
         }
         BigDecimal dailyInterest = contract.getLoanAmount()
@@ -100,6 +101,14 @@ public class ContractService {
         contract.setDueDate(contract.getDueDate().plusMonths(1));
         contractRepository.save(contract);
         log.info("Contract {} due date extended to {}", id, contract.getDueDate());
+    }
+
+    public void resetStartDate(UUID id, LocalDate newStartDate) {
+        Contract contract = contractRepository.findById(id)
+                .orElseThrow(() -> new ContractNotFoundException(id));
+        contract.setStartDate(newStartDate);
+        contractRepository.save(contract);
+        log.info("Contract {} start date reset to {}", id, newStartDate);
     }
 
     public void reduceLoanAmount(UUID id, BigDecimal paymentAmount) {
