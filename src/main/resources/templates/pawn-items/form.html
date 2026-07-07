@@ -73,6 +73,15 @@
                 </div>
 
                 <div class="mb-3">
+                    <label for="interestRate" class="form-label">Лихвен процент (%)</label>
+                    <input type="number" id="interestRate" th:field="*{interestRate}"
+                           step="0.01" min="0.01"
+                           class="form-control" th:classappend="${#fields.hasErrors('interestRate')} ? 'is-invalid'">
+                    <span class="invalid-feedback" th:if="${#fields.hasErrors('interestRate')}"
+                          th:errors="*{interestRate}"></span>
+                </div>
+
+                <div class="mb-3">
                     <label for="customerId" class="form-label">Клиент</label>
                     <select id="customerId" th:field="*{customerId}"
                             class="form-select" th:classappend="${#fields.hasErrors('customerId')} ? 'is-invalid'">

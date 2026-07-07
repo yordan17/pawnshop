@@ -34,5 +34,9 @@ public class PawnItemRequest {
     private BigDecimal estimatedValue;
 
     @NotNull
+    @DecimalMin(value = "0.01")
+    private BigDecimal interestRate;
+
+    @NotNull
     private UUID customerId;
 }

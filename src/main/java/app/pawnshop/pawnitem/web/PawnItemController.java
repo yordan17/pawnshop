@@ -12,6 +12,7 @@ import app.pawnshop.pawnitem.service.PawnItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -80,6 +81,7 @@ public class PawnItemController {
         request.setCategory(item.getCategory());
         request.setCondition(item.getCondition());
         request.setEstimatedValue(item.getEstimatedValue());
+        request.setInterestRate(item.getInterestRate());
         request.setCustomerId(item.getCustomer().getId());
         model.addAttribute("pawnItemRequest", request);
         model.addAttribute("pawnItemId", id);
@@ -103,17 +105,20 @@ public class PawnItemController {
         }
         pawnItemService.updatePawnItem(id, request);
         log.info("Pawn item updated: {}", id);
-        return "redirect:/pawn-items";
+        return "redirect:/pawn-items/" + id;
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
         try {
             pawnItemService.deletePawnItem(id);
-            log.info("Pawn item deactivated: {}", id);
+            log.info("Pawn item deleted: {}", id);
         } catch (PawnItemNotFoundException e) {
             log.warn("Failed to delete pawn item {}: {}", id, e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Cannot delete pawn item {} due to existing references", id);
+            redirectAttributes.addFlashAttribute("errorMessage", "Вещта не може да бъде изтрита, защото има свързан договор.");
         }
         return "redirect:/pawn-items";
     }

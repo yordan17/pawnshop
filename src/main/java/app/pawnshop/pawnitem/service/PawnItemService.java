@@ -34,6 +34,7 @@ public class PawnItemService {
                 .category(request.getCategory())
                 .condition(request.getCondition())
                 .estimatedValue(request.getEstimatedValue())
+                .interestRate(request.getInterestRate())
                 .status(ItemStatus.AVAILABLE)
                 .customer(customer)
                 .active(true)
@@ -69,6 +70,7 @@ public class PawnItemService {
         item.setCategory(request.getCategory());
         item.setCondition(request.getCondition());
         item.setEstimatedValue(request.getEstimatedValue());
+        item.setInterestRate(request.getInterestRate());
         item.setCustomer(customer);
 
         PawnItem updated = pawnItemRepository.save(item);
@@ -77,12 +79,11 @@ public class PawnItemService {
     }
 
     public void deletePawnItem(UUID id) {
-        PawnItem item = pawnItemRepository.findById(id)
-                .orElseThrow(() -> new PawnItemNotFoundException(id));
-
-        item.setActive(false);
-        pawnItemRepository.save(item);
-        log.info("Pawn item deactivated with id: {}", id);
+        if (!pawnItemRepository.existsById(id)) {
+            throw new PawnItemNotFoundException(id);
+        }
+        pawnItemRepository.deleteById(id);
+        log.info("Pawn item deleted with id: {}", id);
     }
 
     public PawnItem changeItemStatus(UUID id, ItemStatus newStatus) {

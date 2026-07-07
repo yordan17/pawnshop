@@ -61,6 +61,11 @@ public class PawnItem {
     @DecimalMin(value = "0.01")
     private BigDecimal estimatedValue;
 
+    @Column(nullable = false, precision = 5, scale = 2)
+    @NotNull
+    @DecimalMin(value = "0.01")
+    private BigDecimal interestRate;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @NotNull
