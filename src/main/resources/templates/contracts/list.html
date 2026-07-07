@@ -30,6 +30,7 @@
                     <th>Лихва (%)</th>
                     <th>Начало</th>
                     <th>Краен срок</th>
+                    <th>Очакв. лихва (EUR)</th>
                     <th>Статус</th>
                     <th>Действия</th>
                 </tr>
@@ -43,6 +44,7 @@
                     <td th:text="${contract.interestRate}"></td>
                     <td th:text="${contract.startDate}"></td>
                     <td th:text="${contract.dueDate}"></td>
+                    <td th:text="${interestMap[contract.id]}"></td>
                     <td>
                         <span class="badge"
                               th:classappend="${contract.status.name() == 'ACTIVE'} ? 'bg-success' :
@@ -53,6 +55,9 @@
                     </td>
                     <td>
                         <a th:href="@{/contracts/{id}(id=${contract.id})}" class="btn btn-sm btn-outline-primary me-1">Преглед</a>
+                        <a th:if="${contract.status.name() == 'ACTIVE'}"
+                           th:href="@{/payments/new(preselectedContractId=${contract.id})}"
+                           class="btn btn-sm btn-success me-1">Плати</a>
                         <a th:href="@{/contracts/{id}/edit(id=${contract.id})}" class="btn btn-sm btn-outline-secondary me-1"
                            sec:authorize="hasRole('ADMIN')">Редактирай</a>
                         <form th:action="@{/contracts/{id}/delete(id=${contract.id})}" method="post" class="d-inline"

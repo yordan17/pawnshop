@@ -24,6 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -38,7 +42,13 @@ public class ContractController {
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("contracts", contractService.getAllContracts());
+        List<Contract> contracts = contractService.getAllContracts();
+        Map<UUID, BigDecimal> interestMap = new HashMap<>();
+        for (Contract contract : contracts) {
+            interestMap.put(contract.getId(), contractService.calculateAccruedInterest(contract));
+        }
+        model.addAttribute("contracts", contracts);
+        model.addAttribute("interestMap", interestMap);
         return "contracts/list";
     }
 
@@ -66,7 +76,10 @@ public class ContractController {
     @GetMapping("/{id}")
     public String details(@PathVariable UUID id, Model model) {
         Contract contract = contractService.getContractById(id);
+        java.math.BigDecimal accruedInterest = contractService.calculateAccruedInterest(contract);
         model.addAttribute("contract", contract);
+        model.addAttribute("accruedInterest", accruedInterest);
+        model.addAttribute("totalDue", contract.getLoanAmount().add(accruedInterest));
         model.addAttribute("payments", paymentService.getPaymentsByContractId(id));
         model.addAttribute("statuses", ContractStatus.values());
         return "contracts/details";

@@ -47,6 +47,12 @@
                         <dt class="col-sm-4">Краен срок</dt>
                         <dd class="col-sm-8" th:text="${contract.dueDate}"></dd>
 
+                        <dt class="col-sm-4">Начислена лихва</dt>
+                        <dd class="col-sm-8" th:text="${accruedInterest + ' EUR'}"></dd>
+
+                        <dt class="col-sm-4">Дължима сума</dt>
+                        <dd class="col-sm-8 fw-bold" th:text="${totalDue + ' EUR'}"></dd>
+
                         <dt class="col-sm-4">Статус</dt>
                         <dd class="col-sm-8">
                             <span class="badge"
