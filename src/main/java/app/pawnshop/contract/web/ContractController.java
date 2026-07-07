@@ -105,9 +105,9 @@ public class ContractController {
     public String delete(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
         try {
             contractService.deleteContract(id);
-            log.info("Contract cancelled: {}", id);
-        } catch (ContractNotFoundException | InvalidContractStatusTransitionException e) {
-            log.warn("Failed to cancel contract {}: {}", id, e.getMessage());
+            log.info("Contract deleted: {}", id);
+        } catch (ContractNotFoundException e) {
+            log.warn("Failed to delete contract {}: {}", id, e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/contracts/" + id;
         }

@@ -81,10 +81,12 @@ public class ContractService {
         Contract contract = contractRepository.findById(id)
                 .orElseThrow(() -> new ContractNotFoundException(id));
 
-        validateStatusTransition(contract.getStatus(), ContractStatus.CANCELLED);
-        contract.setStatus(ContractStatus.CANCELLED);
-        contractRepository.save(contract);
-        log.info("Contract cancelled with id: {}", id);
+        if (contract.getStatus() == ContractStatus.ACTIVE) {
+            pawnItemService.changeItemStatus(contract.getPawnItem().getId(), ItemStatus.AVAILABLE);
+        }
+
+        contractRepository.deleteById(id);
+        log.info("Contract {} deleted with id: {}", contract.getContractNumber(), id);
     }
 
     public Contract changeContractStatus(UUID id, ContractStatus newStatus) {
@@ -94,6 +96,11 @@ public class ContractService {
         validateStatusTransition(contract.getStatus(), newStatus);
         contract.setStatus(newStatus);
         Contract updated = contractRepository.save(contract);
+
+        if (newStatus == ContractStatus.REDEEMED) {
+            pawnItemService.changeItemStatus(contract.getPawnItem().getId(), ItemStatus.AVAILABLE);
+        }
+
         log.info("Contract {} status changed to {}", id, newStatus);
         return updated;
     }
@@ -101,8 +108,7 @@ public class ContractService {
     private void validateStatusTransition(ContractStatus current, ContractStatus next) {
         boolean valid = switch (current) {
             case ACTIVE -> next == ContractStatus.REDEEMED
-                    || next == ContractStatus.EXPIRED
-                    || next == ContractStatus.CANCELLED;
+                    || next == ContractStatus.EXPIRED;
             case EXPIRED -> next == ContractStatus.SOLD;
             default -> false;
         };
