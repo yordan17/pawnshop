@@ -8,6 +8,7 @@ import app.pawnshop.customer.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -74,7 +75,8 @@ public class CustomerController {
         request.setPhoneNumber(customer.getPhoneNumber());
         request.setEmail(customer.getEmail());
         request.setPersonalId(customer.getPersonalId());
-        request.setAddress(customer.getAddress());
+        request.setCity(customer.getCity());
+        request.setStreet(customer.getStreet());
         model.addAttribute("customerRequest", request);
         model.addAttribute("customerId", id);
         return "customers/form";
@@ -105,10 +107,13 @@ public class CustomerController {
     public String delete(@PathVariable UUID id, RedirectAttributes redirectAttributes) {
         try {
             customerService.deleteCustomer(id);
-            log.info("Customer deactivated: {}", id);
+            log.info("Customer deleted: {}", id);
         } catch (CustomerNotFoundException e) {
             log.warn("Failed to delete customer {}: {}", id, e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Cannot delete customer {} due to existing references", id);
+            redirectAttributes.addFlashAttribute("errorMessage", "Клиентът не може да бъде изтрит, защото има свързани вещи или договори.");
         }
         return "redirect:/customers";
     }

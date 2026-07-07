@@ -32,6 +32,10 @@ public class CustomerRequest {
     private String personalId;
 
     @NotBlank
+    @Size(max = 100)
+    private String city;
+
+    @NotBlank
     @Size(max = 255)
-    private String address;
+    private String street;
 }

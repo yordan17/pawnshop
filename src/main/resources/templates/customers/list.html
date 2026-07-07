@@ -27,7 +27,8 @@
                     <th>Телефон</th>
                     <th>Имейл</th>
                     <th>ЕГН</th>
-                    <th>Статус</th>
+                    <th>Град</th>
+                    <th>Улица</th>
                     <th>Действия</th>
                 </tr>
             </thead>
@@ -37,10 +38,8 @@
                     <td th:text="${customer.phoneNumber}"></td>
                     <td th:text="${customer.email}"></td>
                     <td th:text="${customer.personalId}"></td>
-                    <td>
-                        <span th:if="${customer.active}" class="badge bg-success">Активен</span>
-                        <span th:unless="${customer.active}" class="badge bg-secondary">Неактивен</span>
-                    </td>
+                    <td th:text="${customer.city}"></td>
+                    <td th:text="${customer.street}"></td>
                     <td>
                         <a th:href="@{/customers/{id}(id=${customer.id})}" class="btn btn-sm btn-outline-primary me-1">Преглед</a>
                         <a th:href="@{/customers/{id}/edit(id=${customer.id})}" class="btn btn-sm btn-outline-secondary me-1">Редактирай</a>
@@ -52,7 +51,7 @@
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(customers)}">
-                    <td colspan="6" class="text-center text-muted">Няма регистрирани клиенти.</td>
+                    <td colspan="7" class="text-center text-muted">Няма регистрирани клиенти.</td>
                 </tr>
             </tbody>
         </table>

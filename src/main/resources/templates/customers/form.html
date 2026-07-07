@@ -64,11 +64,19 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="address" class="form-label">Адрес</label>
-                    <input type="text" id="address" th:field="*{address}"
-                           class="form-control" th:classappend="${#fields.hasErrors('address')} ? 'is-invalid'">
-                    <span class="invalid-feedback" th:if="${#fields.hasErrors('address')}"
-                          th:errors="*{address}"></span>
+                    <label for="city" class="form-label">Град</label>
+                    <input type="text" id="city" th:field="*{city}"
+                           class="form-control" th:classappend="${#fields.hasErrors('city')} ? 'is-invalid'">
+                    <span class="invalid-feedback" th:if="${#fields.hasErrors('city')}"
+                          th:errors="*{city}"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label for="street" class="form-label">Улица</label>
+                    <input type="text" id="street" th:field="*{street}"
+                           class="form-control" th:classappend="${#fields.hasErrors('street')} ? 'is-invalid'">
+                    <span class="invalid-feedback" th:if="${#fields.hasErrors('street')}"
+                          th:errors="*{street}"></span>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100"

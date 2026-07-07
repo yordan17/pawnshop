@@ -57,9 +57,12 @@ public class Customer {
 
     @Column(nullable = false)
     @NotBlank
-    @Size(max = 255)
-    private String address;
+    @Size(max = 100)
+    private String city;
 
     @Column(nullable = false)
-    private boolean active;
+    @NotBlank
+    @Size(max = 255)
+    private String street;
+
 }

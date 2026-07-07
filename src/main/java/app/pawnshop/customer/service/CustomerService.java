@@ -33,8 +33,8 @@ public class CustomerService {
                 .phoneNumber(request.getPhoneNumber())
                 .email(request.getEmail())
                 .personalId(request.getPersonalId())
-                .address(request.getAddress())
-                .active(true)
+                .city(request.getCity())
+                .street(request.getStreet())
                 .build();
 
         Customer saved = customerRepository.save(customer);
@@ -69,7 +69,8 @@ public class CustomerService {
         customer.setPhoneNumber(request.getPhoneNumber());
         customer.setEmail(request.getEmail());
         customer.setPersonalId(request.getPersonalId());
-        customer.setAddress(request.getAddress());
+        customer.setCity(request.getCity());
+        customer.setStreet(request.getStreet());
 
         Customer updated = customerRepository.save(customer);
         log.info("Customer updated with id: {}", updated.getId());
@@ -77,11 +78,10 @@ public class CustomerService {
     }
 
     public void deleteCustomer(UUID id) {
-        Customer customer = customerRepository.findById(id)
-                .orElseThrow(() -> new CustomerNotFoundException(id));
-
-        customer.setActive(false);
-        customerRepository.save(customer);
-        log.info("Customer deactivated with id: {}", id);
+        if (!customerRepository.existsById(id)) {
+            throw new CustomerNotFoundException(id);
+        }
+        customerRepository.deleteById(id);
+        log.info("Customer deleted with id: {}", id);
     }
 }

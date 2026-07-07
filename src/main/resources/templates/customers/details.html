@@ -32,14 +32,12 @@
                 <dt class="col-sm-3">ЕГН</dt>
                 <dd class="col-sm-9" th:text="${customer.personalId}"></dd>
 
-                <dt class="col-sm-3">Адрес</dt>
-                <dd class="col-sm-9" th:text="${customer.address}"></dd>
+                <dt class="col-sm-3">Град</dt>
+                <dd class="col-sm-9" th:text="${customer.city}"></dd>
 
-                <dt class="col-sm-3">Статус</dt>
-                <dd class="col-sm-9">
-                    <span th:if="${customer.active}" class="badge bg-success">Активен</span>
-                    <span th:unless="${customer.active}" class="badge bg-secondary">Неактивен</span>
-                </dd>
+                <dt class="col-sm-3">Улица</dt>
+                <dd class="col-sm-9" th:text="${customer.street}"></dd>
+
             </dl>
         </div>
     </div>
