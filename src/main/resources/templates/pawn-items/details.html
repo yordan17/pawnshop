@@ -37,7 +37,7 @@
                         <dd class="col-sm-8" th:text="${pawnItem.condition}"></dd>
 
                         <dt class="col-sm-4">Оценена стойност</dt>
-                        <dd class="col-sm-8" th:text="${pawnItem.estimatedValue + ' EUR'}"></dd>
+                        <dd class="col-sm-8" th:text="${'€' + pawnItem.estimatedValue}"></dd>
 
                         <dt class="col-sm-4">Клиент</dt>
                         <dd class="col-sm-8" th:text="${pawnItem.customer.firstName + ' ' + pawnItem.customer.lastName}"></dd>
