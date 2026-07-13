@@ -1,5 +1,6 @@
 package app.pawnshop.payment.web;
 
+import app.pawnshop.contract.model.Contract;
 import app.pawnshop.contract.model.ContractStatus;
 import app.pawnshop.contract.service.ContractService;
 import app.pawnshop.payment.dto.PaymentRequest;
@@ -22,9 +23,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -50,28 +55,18 @@ public class PaymentController {
     }
 
     @GetMapping("/new")
-    public String newForm(@org.springframework.web.bind.annotation.RequestParam(required = false) UUID preselectedContractId,
-                          Model model) {
+    public String newForm(@RequestParam(required = false) UUID preselectedContractId, Model model) {
         PaymentRequest request = new PaymentRequest();
-        request.setPaymentDate(java.time.LocalDate.now());
+        request.setPaymentDate(LocalDate.now());
         if (preselectedContractId != null) {
             request.setContractId(preselectedContractId);
         }
 
-        List<app.pawnshop.contract.model.Contract> activeContracts = contractService.getContractsByStatus(ContractStatus.ACTIVE);
-        java.util.Map<String, Object> contractDataMap = new java.util.HashMap<>();
-        for (app.pawnshop.contract.model.Contract contract : activeContracts) {
-            java.util.Map<String, Object> data = new java.util.HashMap<>();
-            data.put("loanAmount", contract.getLoanAmount());
-            data.put("interestRate", contract.getInterestRate());
-            data.put("startDate", contract.getStartDate().toString());
-            data.put("dueDate", contract.getDueDate().toString());
-            contractDataMap.put(contract.getId().toString(), data);
-        }
+        List<Contract> activeContracts = contractService.getContractsByStatus(ContractStatus.ACTIVE);
 
         model.addAttribute("paymentRequest", request);
         model.addAttribute("activeContracts", activeContracts);
-        model.addAttribute("contractDataMap", contractDataMap);
+        model.addAttribute("contractDataMap", buildContractDataMap(activeContracts));
         model.addAttribute("paymentTypes", PaymentType.values());
         return "payments/form";
     }
@@ -82,8 +77,11 @@ public class PaymentController {
                          Authentication authentication,
                          Model model,
                          RedirectAttributes redirectAttributes) {
+        List<Contract> activeContracts = contractService.getContractsByStatus(ContractStatus.ACTIVE);
+
         if (bindingResult.hasErrors()) {
-            model.addAttribute("activeContracts", contractService.getContractsByStatus(ContractStatus.ACTIVE));
+            model.addAttribute("activeContracts", activeContracts);
+            model.addAttribute("contractDataMap", buildContractDataMap(activeContracts));
             model.addAttribute("paymentTypes", PaymentType.values());
             return "payments/form";
         }
@@ -98,11 +96,25 @@ public class PaymentController {
         } catch (ContractNotActiveException e) {
             log.warn("Payment creation failed - contract not active: {}", e.getMessage());
             model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("activeContracts", contractService.getContractsByStatus(ContractStatus.ACTIVE));
+            model.addAttribute("activeContracts", activeContracts);
+            model.addAttribute("contractDataMap", buildContractDataMap(activeContracts));
             model.addAttribute("paymentTypes", PaymentType.values());
             return "payments/form";
         }
 
         return "redirect:/payments";
+    }
+
+    private Map<String, Object> buildContractDataMap(List<Contract> contracts) {
+        Map<String, Object> contractDataMap = new HashMap<>();
+        for (Contract contract : contracts) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("loanAmount", contract.getLoanAmount());
+            data.put("interestRate", contract.getInterestRate());
+            data.put("startDate", contract.getStartDate().toString());
+            data.put("dueDate", contract.getDueDate().toString());
+            contractDataMap.put(contract.getId().toString(), data);
+        }
+        return contractDataMap;
     }
 }
