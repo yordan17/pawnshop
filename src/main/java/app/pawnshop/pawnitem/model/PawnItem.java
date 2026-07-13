@@ -56,6 +56,28 @@ public class PawnItem {
     @Column(precision = 5, scale = 2)
     private BigDecimal interestRate;
 
+    @Column(precision = 8, scale = 2)
+    private BigDecimal weightGrams;
+
+    @Column
+    private Integer purityCarats;
+
+    @Column(length = 100)
+    private String brand;
+
+    @Column(length = 100)
+    private String model;
+
+    @Column(length = 100)
+    private String serialNumber;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50)
+    private JewelryType jewelryType;
+
+    @Column
+    private Integer quantity;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ItemStatus status;

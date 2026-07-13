@@ -7,6 +7,7 @@ import app.pawnshop.pawnitem.exception.PawnItemNotFoundException;
 import app.pawnshop.pawnitem.model.ItemCategory;
 import app.pawnshop.pawnitem.model.ItemCondition;
 import app.pawnshop.pawnitem.model.ItemStatus;
+import app.pawnshop.pawnitem.model.JewelryType;
 import app.pawnshop.pawnitem.model.PawnItem;
 import app.pawnshop.pawnitem.service.PawnItemService;
 import jakarta.validation.Valid;
@@ -44,9 +45,7 @@ public class PawnItemController {
     @GetMapping("/new")
     public String newForm(Model model) {
         model.addAttribute("pawnItemRequest", new PawnItemRequest());
-        model.addAttribute("customers", customerService.getAllCustomers());
-        model.addAttribute("categories", ItemCategory.values());
-        model.addAttribute("conditions", ItemCondition.values());
+        addFormAttributes(model);
         return "pawn-items/form";
     }
 
@@ -55,9 +54,7 @@ public class PawnItemController {
                          BindingResult bindingResult,
                          Model model) {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("customers", customerService.getAllCustomers());
-            model.addAttribute("categories", ItemCategory.values());
-            model.addAttribute("conditions", ItemCondition.values());
+            addFormAttributes(model);
             return "pawn-items/form";
         }
         pawnItemService.createPawnItem(request);
@@ -82,12 +79,17 @@ public class PawnItemController {
         request.setCondition(item.getCondition());
         request.setEstimatedValue(item.getEstimatedValue());
         request.setInterestRate(item.getInterestRate());
+        request.setWeightGrams(item.getWeightGrams());
+        request.setPurityCarats(item.getPurityCarats());
+        request.setBrand(item.getBrand());
+        request.setModel(item.getModel());
+        request.setSerialNumber(item.getSerialNumber());
+        request.setJewelryType(item.getJewelryType());
+        request.setQuantity(item.getQuantity());
         request.setCustomerId(item.getCustomer().getId());
         model.addAttribute("pawnItemRequest", request);
         model.addAttribute("pawnItemId", id);
-        model.addAttribute("customers", customerService.getAllCustomers());
-        model.addAttribute("categories", ItemCategory.values());
-        model.addAttribute("conditions", ItemCondition.values());
+        addFormAttributes(model);
         return "pawn-items/form";
     }
 
@@ -98,9 +100,7 @@ public class PawnItemController {
                          Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("pawnItemId", id);
-            model.addAttribute("customers", customerService.getAllCustomers());
-            model.addAttribute("categories", ItemCategory.values());
-            model.addAttribute("conditions", ItemCondition.values());
+            addFormAttributes(model);
             return "pawn-items/form";
         }
         pawnItemService.updatePawnItem(id, request);
@@ -135,5 +135,12 @@ public class PawnItemController {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
         return "redirect:/pawn-items/" + id;
+    }
+
+    private void addFormAttributes(Model model) {
+        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("categories", ItemCategory.values());
+        model.addAttribute("conditions", ItemCondition.values());
+        model.addAttribute("jewelryTypes", JewelryType.values());
     }
 }

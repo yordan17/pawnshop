@@ -39,6 +39,41 @@
                         <dt class="col-sm-4">Оценена стойност</dt>
                         <dd class="col-sm-8" th:text="${'€' + pawnItem.estimatedValue}"></dd>
 
+                        <th:block th:if="${pawnItem.jewelryType != null}">
+                            <dt class="col-sm-4">Тип бижу</dt>
+                            <dd class="col-sm-8" th:text="${pawnItem.jewelryType}"></dd>
+                        </th:block>
+
+                        <th:block th:if="${pawnItem.quantity != null}">
+                            <dt class="col-sm-4">Брой</dt>
+                            <dd class="col-sm-8" th:text="${pawnItem.quantity + ' бр.'}"></dd>
+                        </th:block>
+
+                        <th:block th:if="${pawnItem.brand != null}">
+                            <dt class="col-sm-4">Марка</dt>
+                            <dd class="col-sm-8" th:text="${pawnItem.brand}"></dd>
+                        </th:block>
+
+                        <th:block th:if="${pawnItem.model != null}">
+                            <dt class="col-sm-4">Модел</dt>
+                            <dd class="col-sm-8" th:text="${pawnItem.model}"></dd>
+                        </th:block>
+
+                        <th:block th:if="${pawnItem.serialNumber != null}">
+                            <dt class="col-sm-4">Сериен номер</dt>
+                            <dd class="col-sm-8" th:text="${pawnItem.serialNumber}"></dd>
+                        </th:block>
+
+                        <th:block th:if="${pawnItem.weightGrams != null}">
+                            <dt class="col-sm-4">Тегло</dt>
+                            <dd class="col-sm-8" th:text="${pawnItem.weightGrams + ' г'}"></dd>
+                        </th:block>
+
+                        <th:block th:if="${pawnItem.purityCarats != null}">
+                            <dt class="col-sm-4">Проба / Карати</dt>
+                            <dd class="col-sm-8" th:text="${pawnItem.purityCarats + ' кт'}"></dd>
+                        </th:block>
+
                         <dt class="col-sm-4">Клиент</dt>
                         <dd class="col-sm-8" th:text="${pawnItem.customer.firstName + ' ' + pawnItem.customer.lastName}"></dd>
 

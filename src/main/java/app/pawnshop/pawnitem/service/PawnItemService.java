@@ -35,6 +35,13 @@ public class PawnItemService {
                 .condition(request.getCondition())
                 .estimatedValue(request.getEstimatedValue())
                 .interestRate(request.getInterestRate())
+                .weightGrams(request.getWeightGrams())
+                .purityCarats(request.getPurityCarats())
+                .brand(request.getBrand())
+                .model(request.getModel())
+                .serialNumber(request.getSerialNumber())
+                .jewelryType(request.getJewelryType())
+                .quantity(request.getQuantity())
                 .status(ItemStatus.AVAILABLE)
                 .customer(customer)
                 .active(true)
@@ -71,6 +78,13 @@ public class PawnItemService {
         item.setCondition(request.getCondition());
         item.setEstimatedValue(request.getEstimatedValue());
         item.setInterestRate(request.getInterestRate());
+        item.setWeightGrams(request.getWeightGrams());
+        item.setPurityCarats(request.getPurityCarats());
+        item.setBrand(request.getBrand());
+        item.setModel(request.getModel());
+        item.setSerialNumber(request.getSerialNumber());
+        item.setJewelryType(request.getJewelryType());
+        item.setQuantity(request.getQuantity());
         item.setCustomer(customer);
 
         PawnItem updated = pawnItemRepository.save(item);

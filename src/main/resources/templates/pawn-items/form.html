@@ -22,22 +22,6 @@
                   th:object="${pawnItemRequest}" method="post" novalidate>
 
                 <div class="mb-3">
-                    <label for="name" class="form-label">Наименование</label>
-                    <input type="text" id="name" th:field="*{name}"
-                           class="form-control" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
-                    <span class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
-                          th:errors="*{name}"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label for="description" class="form-label">Описание</label>
-                    <textarea id="description" th:field="*{description}" rows="3"
-                              class="form-control" th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"></textarea>
-                    <span class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
-                          th:errors="*{description}"></span>
-                </div>
-
-                <div class="mb-3">
                     <label for="category" class="form-label">Категория</label>
                     <select id="category" th:field="*{category}"
                             class="form-select" th:classappend="${#fields.hasErrors('category')} ? 'is-invalid'">
@@ -48,6 +32,83 @@
                     </select>
                     <span class="invalid-feedback" th:if="${#fields.hasErrors('category')}"
                           th:errors="*{category}"></span>
+                </div>
+
+                <div id="nameField" class="mb-3">
+                    <label for="name" class="form-label">Наименование</label>
+                    <input type="text" id="name" th:field="*{name}"
+                           class="form-control" th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                    <span class="invalid-feedback" th:if="${#fields.hasErrors('name')}"
+                          th:errors="*{name}"></span>
+                </div>
+
+                <div id="electronicsFields" class="d-none">
+                    <div class="mb-3">
+                        <label for="brand" class="form-label">Марка</label>
+                        <input type="text" id="brand" th:field="*{brand}"
+                               class="form-control" th:classappend="${#fields.hasErrors('brand')} ? 'is-invalid'">
+                        <span class="invalid-feedback" th:if="${#fields.hasErrors('brand')}"
+                              th:errors="*{brand}"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="model" class="form-label">Модел</label>
+                        <input type="text" id="model" th:field="*{model}"
+                               class="form-control" th:classappend="${#fields.hasErrors('model')} ? 'is-invalid'">
+                        <span class="invalid-feedback" th:if="${#fields.hasErrors('model')}"
+                              th:errors="*{model}"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="serialNumber" class="form-label">Сериен номер</label>
+                        <input type="text" id="serialNumber" th:field="*{serialNumber}"
+                               class="form-control" th:classappend="${#fields.hasErrors('serialNumber')} ? 'is-invalid'">
+                        <span class="invalid-feedback" th:if="${#fields.hasErrors('serialNumber')}"
+                              th:errors="*{serialNumber}"></span>
+                    </div>
+                </div>
+
+                <div id="jewelryFields" class="d-none">
+                    <div class="mb-3">
+                        <label for="jewelryType" class="form-label">Тип бижу</label>
+                        <select id="jewelryType" th:field="*{jewelryType}" class="form-select">
+                            <option value="">-- Изберете --</option>
+                            <option th:each="jt : ${jewelryTypes}"
+                                    th:value="${jt}"
+                                    th:text="${jt}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Брой (бр.)</label>
+                        <select id="quantity" th:field="*{quantity}" class="form-select">
+                            <option value="">-- Изберете --</option>
+                            <option th:each="n : ${#numbers.sequence(1, 20)}"
+                                    th:value="${n}"
+                                    th:text="${n}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="weightGrams" class="form-label">Тегло (грама)</label>
+                        <input type="number" id="weightGrams" th:field="*{weightGrams}"
+                               step="0.01" min="0.01"
+                               class="form-control" th:classappend="${#fields.hasErrors('weightGrams')} ? 'is-invalid'">
+                        <span class="invalid-feedback" th:if="${#fields.hasErrors('weightGrams')}"
+                              th:errors="*{weightGrams}"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="purityCarats" class="form-label">Проба / Карати</label>
+                        <select id="purityCarats" th:field="*{purityCarats}" class="form-select">
+                            <option value="">-- Изберете --</option>
+                            <option value="6">6 кт (250‰)</option>
+                            <option value="8">8 кт (333‰)</option>
+                            <option value="9">9 кт (375‰)</option>
+                            <option value="10">10 кт (417‰)</option>
+                            <option value="12">12 кт (500‰)</option>
+                            <option value="14">14 кт (585‰)</option>
+                            <option value="18">18 кт (750‰)</option>
+                            <option value="21">21 кт (875‰)</option>
+                            <option value="22">22 кт (916‰)</option>
+                            <option value="24">24 кт (999‰)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -74,12 +135,22 @@
 
                 <div class="mb-3">
                     <label for="interestRate" class="form-label">Лихвен процент (%)</label>
-                    <input type="number" id="interestRate" th:field="*{interestRate}"
-                           step="0.01" min="0.01"
-                           class="form-control" th:classappend="${#fields.hasErrors('interestRate')} ? 'is-invalid'">
+                    <select id="interestRate" th:field="*{interestRate}"
+                            class="form-select" th:classappend="${#fields.hasErrors('interestRate')} ? 'is-invalid'">
+                        <option value="">-- Изберете --</option>
+                        <option value="3">3%</option>
+                        <option value="4">4%</option>
+                        <option value="6">6%</option>
+                        <option value="8">8%</option>
+                        <option value="10">10%</option>
+                        <option value="12">12%</option>
+                        <option value="20">20%</option>
+                    </select>
                     <span class="invalid-feedback" th:if="${#fields.hasErrors('interestRate')}"
                           th:errors="*{interestRate}"></span>
                 </div>
+
+
 
                 <div class="mb-3">
                     <label for="customerId" class="form-label">Клиент</label>
@@ -94,6 +165,14 @@
                           th:errors="*{customerId}"></span>
                 </div>
 
+                <div class="mb-3">
+                    <label for="description" class="form-label">Описание (незадължително)</label>
+                    <textarea id="description" th:field="*{description}" rows="3"
+                              class="form-control" th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"></textarea>
+                    <span class="invalid-feedback" th:if="${#fields.hasErrors('description')}"
+                          th:errors="*{description}"></span>
+                </div>
+
                 <button type="submit" class="btn btn-primary w-100"
                         th:text="${pawnItemId != null} ? 'Запази промените' : 'Добави вещ'"></button>
             </form>
@@ -102,5 +181,57 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const categorySelect = document.getElementById('category');
+    const nameField = document.getElementById('nameField');
+    const nameInput = document.getElementById('name');
+    const jewelryFields = document.getElementById('jewelryFields');
+    const electronicsFields = document.getElementById('electronicsFields');
+    const brandInput = document.getElementById('brand');
+    const modelInput = document.getElementById('model');
+
+    const jewelryTypeSelect = document.getElementById('jewelryType');
+    const quantitySelect = document.getElementById('quantity');
+
+    function syncElectronicsName() {
+        const brand = brandInput.value.trim();
+        const model = modelInput.value.trim();
+        nameInput.value = (brand + ' ' + model).trim();
+    }
+
+    function syncJewelryName() {
+        const type = jewelryTypeSelect.options[jewelryTypeSelect.selectedIndex]?.text || '';
+        const qty = quantitySelect.value;
+        nameInput.value = qty ? type + ' x' + qty : type;
+    }
+
+    brandInput.addEventListener('input', syncElectronicsName);
+    modelInput.addEventListener('input', syncElectronicsName);
+    jewelryTypeSelect.addEventListener('change', syncJewelryName);
+    quantitySelect.addEventListener('change', syncJewelryName);
+
+    function toggleFields() {
+        const val = categorySelect.value;
+
+        if (val === 'ELECTRONICS') {
+            nameField.classList.add('d-none');
+            electronicsFields.classList.remove('d-none');
+            jewelryFields.classList.add('d-none');
+            syncElectronicsName();
+        } else if (val === 'JEWELRY' || val === 'WATCHES') {
+            nameField.classList.add('d-none');
+            electronicsFields.classList.add('d-none');
+            jewelryFields.classList.remove('d-none');
+            syncJewelryName();
+        } else {
+            nameField.classList.remove('d-none');
+            electronicsFields.classList.add('d-none');
+            jewelryFields.classList.add('d-none');
+        }
+    }
+
+    categorySelect.addEventListener('change', toggleFields);
+    toggleFields();
+</script>
 </body>
 </html>

@@ -2,6 +2,7 @@ package app.pawnshop.pawnitem.dto;
 
 import app.pawnshop.pawnitem.model.ItemCategory;
 import app.pawnshop.pawnitem.model.ItemCondition;
+import app.pawnshop.pawnitem.model.JewelryType;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -36,6 +37,24 @@ public class PawnItemRequest {
     @NotNull(message = "Лихвеният процент е задължителен")
     @DecimalMin(value = "0.01", message = "Лихвеният процент трябва да е поне 0.01")
     private BigDecimal interestRate;
+
+    @DecimalMin(value = "0.01", message = "Теглото трябва да е поне 0.01 грама")
+    private BigDecimal weightGrams;
+
+    private Integer purityCarats;
+
+    @Size(max = 100, message = "Марката не може да надвишава 100 символа")
+    private String brand;
+
+    @Size(max = 100, message = "Моделът не може да надвишава 100 символа")
+    private String model;
+
+    @Size(max = 100, message = "Серийният номер не може да надвишава 100 символа")
+    private String serialNumber;
+
+    private JewelryType jewelryType;
+
+    private Integer quantity;
 
     @NotNull(message = "Клиентът е задължителен")
     private UUID customerId;
