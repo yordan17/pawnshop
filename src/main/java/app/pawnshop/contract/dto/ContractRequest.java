@@ -11,12 +11,12 @@ import java.util.UUID;
 @Setter
 public class ContractRequest {
 
-    @NotNull
+    @NotNull(message = "Началната дата е задължителна")
     private LocalDate startDate;
 
-    @NotNull
+    @NotNull(message = "Крайният срок е задължителен")
     private LocalDate dueDate;
 
-    @NotNull
+    @NotNull(message = "Вещта е задължителна")
     private UUID pawnItemId;
 }

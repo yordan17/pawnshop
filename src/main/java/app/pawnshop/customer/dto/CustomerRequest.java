@@ -11,31 +11,31 @@ import lombok.Setter;
 @Setter
 public class CustomerRequest {
 
-    @NotBlank
-    @Size(min = 2, max = 50)
+    @NotBlank(message = "Името е задължително")
+    @Size(min = 2, max = 50, message = "Името трябва да е между 2 и 50 символа")
     private String firstName;
 
-    @NotBlank
-    @Size(min = 2, max = 50)
+    @NotBlank(message = "Фамилията е задължителна")
+    @Size(min = 2, max = 50, message = "Фамилията трябва да е между 2 и 50 символа")
     private String lastName;
 
-    @NotBlank
-    @Pattern(regexp = "\\d{5,20}", message = "Телефонът трябва да съдържа само числа")
+    @NotBlank(message = "Телефонът е задължителен")
+    @Pattern(regexp = "\\d{5,20}", message = "Телефонът трябва да съдържа само цифри (5-20)")
     private String phoneNumber;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "Имейлът е задължителен")
+    @Email(message = "Невалиден имейл адрес")
     private String email;
 
-    @NotBlank
-    @Pattern(regexp = "\\d{10}", message = "ЕГН трябва да съдържа точно 10 числа")
+    @NotBlank(message = "ЕГН-то е задължително")
+    @Pattern(regexp = "\\d{10}", message = "ЕГН трябва да съдържа точно 10 цифри")
     private String personalId;
 
-    @NotBlank
-    @Size(max = 100)
+    @NotBlank(message = "Градът е задължителен")
+    @Size(max = 100, message = "Градът не може да надвишава 100 символа")
     private String city;
 
-    @NotBlank
-    @Size(max = 255)
+    @NotBlank(message = "Улицата е задължителна")
+    @Size(max = 255, message = "Улицата не може да надвишава 255 символа")
     private String street;
 }

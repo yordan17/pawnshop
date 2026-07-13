@@ -16,21 +16,21 @@ import java.util.UUID;
 @Setter
 public class PaymentRequest {
 
-    @NotNull
-    @DecimalMin(value = "0.01")
+    @NotNull(message = "Сумата е задължителна")
+    @DecimalMin(value = "0.01", message = "Сумата трябва да е поне 0.01")
     private BigDecimal amount;
 
-    @NotNull
+    @NotNull(message = "Датата е задължителна")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate paymentDate;
 
-    @NotNull
+    @NotNull(message = "Типът на плащането е задължителен")
     private PaymentType type;
 
-    @Size(max = 500)
+    @Size(max = 500, message = "Бележките не могат да надвишават 500 символа")
     private String notes;
 
-    @NotNull
+    @NotNull(message = "Договорът е задължителен")
     private UUID contractId;
 
     private UUID receivedById;
