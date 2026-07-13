@@ -21,7 +21,7 @@
 
     <div class="table-responsive">
         <table class="table table-hover">
-            <thead class="table-dark">
+            <thead class="table-dark text-nowrap">
                 <tr>
                     <th>Номер</th>
                     <th>Клиент</th>
@@ -43,8 +43,8 @@
                     <td th:text="${contract.pawnItem.name}"></td>
                     <td th:text="${'€' + contract.loanAmount}"></td>
                     <td th:text="${contract.interestRate + '%'}"></td>
-                    <td th:text="${contract.startDate}"></td>
-                    <td th:text="${contract.dueDate}"></td>
+                    <td class="text-nowrap" th:text="${contract.startDate}"></td>
+                    <td class="text-nowrap" th:text="${contract.dueDate}"></td>
                     <td th:text="${'€' + interestMap[contract.id]}"></td>
                     <td>
                         <span class="badge"
@@ -54,12 +54,12 @@
                                              (${contract.status.name() == 'SOLD'} ? 'bg-secondary' : 'bg-danger')))"
                               th:text="${contract.status}"></span>
                     </td>
-                    <td>
-                        <a th:href="@{/contracts/{id}(id=${contract.id})}" class="btn btn-sm btn-outline-primary me-1">Преглед</a>
+                    <td class="text-nowrap">
+                        <a th:href="@{/contracts/{id}(id=${contract.id})}" class="btn btn-sm btn-outline-primary">Преглед</a>
                         <a th:if="${contract.status.name() == 'ACTIVE'}"
                            th:href="@{/payments/new(preselectedContractId=${contract.id})}"
-                           class="btn btn-sm btn-success me-1">Плати</a>
-                        <a th:href="@{/contracts/{id}/edit(id=${contract.id})}" class="btn btn-sm btn-outline-secondary me-1"
+                           class="btn btn-sm btn-success">Плати</a>
+                        <a th:href="@{/contracts/{id}/edit(id=${contract.id})}" class="btn btn-sm btn-outline-secondary"
                            sec:authorize="hasRole('ADMIN')">Редактирай</a>
                         <form th:action="@{/contracts/{id}/delete(id=${contract.id})}" method="post" class="d-inline"
                               sec:authorize="hasRole('ADMIN')">
